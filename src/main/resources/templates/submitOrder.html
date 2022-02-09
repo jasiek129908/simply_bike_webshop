@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista rowerow</title>
+    <link rel="stylesheet" th:href="@{/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div>
+    <div id="content">
+
+        <div class="topnav">
+            <a class="active" th:href="@{/admin/bikes}">Oferta</a>
+            <a th:href="@{/admin}">Panel administartora</a>
+            <div class="nav_to_right">
+                <div sec:authorize="isAnonymous()" style="float:right">
+                    <a th:href="@{/login}">Zaloguj się</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" style="float:right">
+                    <div class="dropdown">
+                        <button class="dropbtn" th:text="${#authentication.getPrincipal().getUsername()}">
+                        </button>
+                        <div class="dropdown-content">
+                            <form id="my_form" th:action="@{/logout}" method="post">
+                                <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">Wyloguj się</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1>Zatwierdzanie zamówienia</h1>
+        <table>
+            <tr>
+                <th>Numer</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Cena</th>
+                <th>Szczegóły</th>
+                <th>Zatwiedź</th>
+            </tr>
+            <tbody>
+            <tr th:each="order: ${orderList}">
+
+                <td th:text="${order.id}">Numer</td>
+                <td th:text="${order.timeStamp}">Data</td>
+                <td th:if="${order.status}">Zrealizowany</td>
+                <td th:unless="${order.status}">Nie zrealizowany</td>
+                <td th:text="${@purchaseServerImpl.calculateTotalPriceByOrder(order)} + ' zł'"></td>
+                <td>
+                    <form th:action="@{|/admin/orderDetails/${order.id}|}" method="get">
+                        <button type="submit">Szczegóły</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="#" th:action="@{'/admin/submitTheOrder/{orderId}'(orderId=${order.id})}" th:method="post">
+                        <button type="submit">
+                            Zatwierdź
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${#lists.isEmpty(orderList)}">
+            <h3>Nie żadnych nie zatwierdzonych zamówień!</h3>
+        </div>
+    </div>
+</div>
+</body>
+</html>

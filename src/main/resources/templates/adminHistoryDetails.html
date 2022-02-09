@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista rowerow</title>
+    <link rel="stylesheet" th:href="@{/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div>
+    <div id="content">
+
+        <div class="topnav">
+            <a class="active" th:href="@{/admin/bikes}">Oferta</a>
+            <a th:href="@{/admin}">Panel administartora</a>
+            <div class="nav_to_right">
+                <div sec:authorize="isAnonymous()" style="float:right">
+                    <a th:href="@{/login}">Zaloguj się</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" style="float:right">
+                    <div class="dropdown">
+                        <button class="dropbtn" th:text="${#authentication.getPrincipal().getUsername()}">
+                        </button>
+                        <div class="dropdown-content">
+                            <form id="my_form" th:action="@{/logout}" method="post">
+                                <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">Wyloguj się</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1>Szczegoły zamówienia</h1>
+        <table>
+            <tr>
+                <th>Rower</th>
+                <th>Cena</th>
+                <th>Ilość</th>
+            </tr>
+            <tbody>
+            <tr th:each="order: ${orderDetail}">
+
+                <td th:text="${order.bike.producer + ' ' + order.bike.model}">Rower</td>
+                <td th:text="${order.bike.price} + ' zł'">Cena</td>
+                <td th:text="${order.quantity}">Ilość</td>
+
+            </tr>
+            </tbody>
+        </table>
+        <h2>Dane klienta</h2>
+        <div class="contactData">
+            <div>
+                <label>Imie:</label>
+                <br>
+                <label>Nazwisko:</label>
+                <br>
+                <label>Mail:</label>
+            </div>
+            <div style="float:left">
+                <span th:text="${customerInfo.name}"></span>
+                <br>
+                <span th:text="${customerInfo.surname}"></span>
+                <br>
+                <span th:text="${customerInfo.email}"></span>
+            </div>
+        </div>
+        <h2>Dane kontaktowe</h2>
+        <div class="contactData">
+            <div>
+                <label>Kraj:</label>
+                <br>
+                <label>Miasto:</label>
+                <br>
+                <label>Kod pocztowy:</label>
+                <br>
+                <label>Nazwa ulicy:</label>
+                <br>
+                <label>Number mieszkania:</label>
+            </div>
+            <div style="float:left">
+                <span th:text="${orderDetail[0].clientOrder.country}"></span>
+                <br>
+                <span th:text="${orderDetail[0].clientOrder.city}"></span>
+                <br>
+                <span th:text="${orderDetail[0].clientOrder.postalCode}"></span>
+                <br>
+                <span th:text="${orderDetail[0].clientOrder.streetAddress}"></span>
+                <br>
+                <span th:text="${orderDetail[0].clientOrder.homeNumber}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

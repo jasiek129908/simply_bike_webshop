@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="purchase.css">
+  <title>Sklep rowerowy</title>
+</head>
+<body>
+<div id="content">
+  <div class="topnav">
+    <a class="active" th:href="@{/bikes}">Oferta</a>
+    <a href="#">Kontakt</a>
+    <div class="nav_to_right">
+      <a th:href="@{/register}">Zarejestrój się</a>
+      <div sec:authorize="isAnonymous()" style="float:right">
+        <a th:href="@{/login}">Zaloguj się</a>
+      </div>
+      <div sec:authorize="isAuthenticated()" style="float:right">
+        <div class="dropdown">
+          <button class="dropbtn" th:text="${#authentication.getPrincipal().getUsername()}">
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <form id="my_form" th:action="@{/logout}" method="post">
+              <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">Wyloguj się</a>
+            </form>
+            <a th:href="@{/transactions}">Historia transakcji</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="data">
+    <div id="form">
+      <h2>Wypełnij dane</h2>
+      <form th:action="@{/process_purchase}" method="post" th:object="${clientOrder}">
+
+        <label class="form-label" for="phone">Phone Number</label>
+        <input type="text" th:field="*{phoneNumber}" id="phone" required/>
+
+        <label class="form-label" for="country">Country</label>
+        <input type="text" th:field="*{country}" id="country" required/>
+
+        <label class="form-label" for="city">City</label>
+        <input type="text" th:field="*{city}" id="city" required/>
+
+        <label class="form-label" for="postalCode">Postal code</label>
+        <input type="text" th:field="*{postalCode}" id="postalCode" required/>
+
+        <label class="form-label" for="streetAddress">Street Name</label>
+        <input type="text" th:field="*{streetAddress}" id="streetAddress" required/>
+
+        <label class="form-label" for="homeNumber">Home number</label>
+        <input type="text" th:field="*{homeNumber}" id="homeNumber" required/>
+
+        <div>
+          <button type="submit">Zapłać</button>
+        </div>
+
+
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

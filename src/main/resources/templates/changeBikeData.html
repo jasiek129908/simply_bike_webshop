@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista rowerow</title>
+    <link rel="stylesheet" th:href="@{/changeBike.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div>
+    <div id="content">
+
+        <div class="topnav">
+            <a class="active" th:href="@{/admin/bikes}">Oferta</a>
+            <a th:href="@{/admin}">Panel administartora</a>
+            <div class="nav_to_right">
+                <div sec:authorize="isAnonymous()" style="float:right">
+                    <a th:href="@{/login}">Zaloguj się</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" style="float:right">
+                    <div class="dropdown">
+                        <button class="dropbtn" th:text="${#authentication.getPrincipal().getUsername()}">
+                        </button>
+                        <div class="dropdown-content">
+                            <form id="my_form" th:action="@{/logout}" method="post">
+                                <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">Wyloguj
+                                    się</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-content" th:text="${info}" th:if="${info}" style="margin-top: 10px;">
+            <span class="close">&times;</span>
+        </div>
+        <h2>Usuwanie roweru</h2>
+        <table>
+            <tr>
+                <th>Producent</th>
+                <th>Model</th>
+                <th>Kategoria</th>
+                <th>Waga</th>
+                <th>Rozmiar ramy</th>
+                <th>Rozmiar kol</th>
+                <th>Cena</th>
+                <th>Ilość</th>
+                <th>Zmień</th>
+            </tr>
+            <tbody>
+            <tr th:each="bike: ${bikeList}">
+                <form th:action="@{/admin/changeBikeData}" method="post" th:object="${bike}">
+                    <a th:field="id"></a>
+                    <td><input type="text" th:value="${bike.producer}" th:name="producer" th:id="producer" required/>
+                    </td>
+                    <td><input type="text" th:value="${bike.model}" th:name="model" th:id="model" required/></td>
+                    <td><input type="text" th:value="${bike.bikeCategory}" th:name="category" required/></td>
+                    <td><input type="number" step="0.01" th:value="${bike.weight}" th:name="weight" th:id="weight"
+                               required/></td>
+                    <td><input type="number" step="0.01" th:value="${bike.sizeOfFrame}" th:name="sizeOfFrame"
+                               th:id="sizeOfFrame"
+                               required/></td>
+                    <td><input type="number" step="0.01" th:value="${bike.sizeOfWheel}" th:name="sizeOfWheel"
+                               th:id="producer"
+                               required/></td>
+                    <td><input type="number" step="0.01" th:value="${bike.price}" th:name="price" th:id="price"
+                               required/></td>
+                    <td><input type="number" th:value="${bike.quantity}" th:name="quantity" th:id="quantity"
+                               required/></td>
+                    <td>
+                        <div>
+                            <button type="submit" th:value="${bike.id}" th:name="id" th:id="id">Zmień</button>
+                        </div>
+                    </td>
+                </form>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+</body>
+</html>

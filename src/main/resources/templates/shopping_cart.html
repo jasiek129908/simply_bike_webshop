@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista rowerow</title>
+    <link rel="stylesheet" th:href="@{/shopping_cart.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div>
+    <div id="content">
+
+        <div class="topnav">
+            <a class="active" th:href="@{/bikes}">Oferta</a>
+            <a href="#">Kontakt</a>
+            <div class="nav_to_right">
+                <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                <a th:href="@{/register}">Zarejestrój się</a>
+                <div sec:authorize="isAnonymous()" style="float:right">
+                    <a th:href="@{/login}">Zaloguj się</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" style="float:right">
+                    <div class="dropdown">
+                        <button class="dropbtn" th:text="${#authentication.getPrincipal().getUsername()}">
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <form id="my_form" th:action="@{/logout}" method="post">
+                                <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">Wyloguj się</a>
+                            </form>
+                            <a th:href="@{/transactionsHistory}">Historia transakcji</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1>Koszyk</h1>
+        <table>
+            <tr>
+                <th>Usuń</th>
+                <th>Nazwa</th>
+                <th>Zdjęcie</th>
+                <th>Ilość dostępna</th>
+                <th>Cena</th>
+                <th>Ilość</th>
+            </tr>
+            <tbody>
+            <tr th:each="item: ${cartItems}">
+                <td>
+                    <form id="form0" th:action="@{|/cart/remove/${item.bike.id}|}" method="post">
+                        <button type="submit">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </form>
+                </td>
+                <td th:text="${item.bike.producer} + ' ' + ${item.bike.model}">Nazwa</td>
+                <td>
+                    <img th:src="${item.bike.imagePath}" style="height: 100px; width: 200px;"/>
+                </td>
+                <td th:text="${item.bike.quantity}">Ilość dostępna</td>
+                <td th:text="${item.bike.price} + ' zł'">Cena</td>
+                <td>
+                    <div id="divChange">
+                        <form id="form1" th:action="@{|/cart/update/${item.bike.id}/${item.quantity - 1}|}" method="post">
+                            <button class="buttonChange" type="submit" style="margin-right: 8px;">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </form>
+                        <span name="quantity" th:text="${item.quantity}" ></span>
+                        <form id="form" th:action="@{|/cart/update/${item.bike.id}/${item.quantity + 1}|}" method="post">
+                            <button class="buttonChange" type="submit" style="margin-left: 8px;">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div style="float:right; padding-top: 10px;">
+            <div th:unless="${#lists.isEmpty(cartItems)}">
+                Łączna cena:
+                <span th:text="${@shoppingCartService.calculateTotalPrice(cartItems)} + ' zł'"></span>
+            </div>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(cartItems)}" style="clear:both; padding-top: 10px;">
+            <form th:action="@{/purchase}" method="get">
+                <button id="buttonPay">Zatwierdź</button>
+            </form>
+        </div>
+        <div th:if="${#lists.isEmpty(cartItems)}">
+            <h3>Nie dodano żadnego produktu</h3>
+        </div>
+    </div>
+</div>
+</body>
+</html>

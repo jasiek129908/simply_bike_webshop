@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="index.css">
+    <title>Sklep rowerowy</title>
+</head>
+<body>
+<div id="content">
+    <div class="topnav">
+        <a class="active" th:href="@{/bikes}">Oferta</a>
+        <a href="#">Kontakt</a>
+        <div class="nav_to_right">
+            <a th:href="@{/register}">Zarejestrój się</a>
+            <div sec:authorize="isAnonymous()" style="float:right">
+                <a th:href="@{/login}">Zaloguj się</a>
+            </div>
+            <div sec:authorize="isAuthenticated()" style="float:right">
+                <div class="dropdown">
+                    <button class="dropbtn" th:text="${#authentication.getPrincipal().getUsername()}">
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <form id="my_form" th:action="@{/logout}" method="post">
+                            <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">Wyloguj się</a>
+                        </form>
+                        <a th:href="@{/transactionsHistory}">Historia transakcji</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="data">
+        <h1>Witaj w sklepie rowerowym</h1>
+        <img src="/images/bike_icon.png" alt="Bike icon" style="height: 150px;width: 150px;">
+
+        <div th:if="${#lists.size(bikeList)}>=3">
+            <h2>Ostatnio dodane rowery</h2>
+            <div class="cards">
+                <div class="column">
+                    <div class="card">
+                        <img th:src="${bikeList[0].imagePath}" alt="img1"
+                             style="width:190px; height:135px; padding-top: 18px;">
+                        <div class="card_container">
+                            <h4><b th:text="${bikeList[0].producer} + ' ' + ${bikeList[0].model}"></b></h4>
+                            <p th:text="${bikeList[0].price} + 'zł'"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card" style="margin-left: 10px">
+                        <img th:src="${bikeList[1].imagePath}" alt="img2"
+                             style="width:190px; height:135px; padding-top: 18px;">
+                        <div class="card_container">
+                            <h4><b th:text="${bikeList[1].producer} + ' ' + ${bikeList[1].model}"></b></h4>
+                            <p th:text="${bikeList[1].price} + 'zł'"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card" style="margin-left: 10px">
+                        <img th:src="${bikeList[2].imagePath}" alt="img3"
+                             style="width:190px; height:135px; padding-top: 18px;">
+                        <div class="card_container">
+                            <h4><b th:text="${bikeList[2].producer} + ' ' + ${bikeList[2].model}"></b></h4>
+                            <p th:text="${bikeList[2].price} + 'zł'"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </divth:if>
+
+    </div>
+</div>
+
+</body>
+</html>

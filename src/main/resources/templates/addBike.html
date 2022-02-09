@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista rowerow</title>
+    <link rel="stylesheet" th:href="@{/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div>
+    <div id="content">
+
+        <div class="topnav">
+            <a class="active" th:href="@{/admin/bikes}">Oferta</a>
+            <a th:href="@{/admin}">Panel administartora</a>
+            <div class="nav_to_right">
+                <div sec:authorize="isAnonymous()" style="float:right">
+                    <a th:href="@{/login}">Zaloguj się</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" style="float:right">
+                    <div class="dropdown">
+                        <button class="dropbtn" th:text="${#authentication.getPrincipal().getUsername()}">
+                        </button>
+                        <div class="dropdown-content">
+                            <form id="my_form" th:action="@{/logout}" method="post">
+                                <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">Wyloguj się</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-content" th:text="${info}" th:if="${info}" style="margin-top: 10px;">
+            <span class="close">&times;</span>
+        </div>
+
+        <div id="form">
+            <h2>Dodawanie roweru</h2>
+            <form th:action="@{/admin/addBike}" method="post" th:object="${bike}" enctype="multipart/form-data">
+
+                <label class="form-label" for="bikeCategory">Kategoria roweru</label>
+                <input list="browsers" th:field="*{bikeCategory}" id="bikeCategory" required/>
+                <datalist id="browsers">
+                    <option value="MTB">
+                    <option value="ROAD">
+                    <option value="GRAVEL">
+                    <option value="CITY">
+                </datalist>
+
+                <label class="form-label" for="producer">Producent</label>
+                <input type="text" th:field="*{producer}" id="producer" required/>
+
+                <label class="form-label" for="model">Model</label>
+                <input type="text" th:field="*{model}" id="model" required/>
+
+                <label class="form-label" for="weight">Waga</label>
+                <input type="number" step="0.01" th:field="*{weight}" id="weight" required/>
+
+                <label class="form-label" for="sizeOfFrame">Rozmiar ramy</label>
+                <input type="number" step="0.01" th:field="*{sizeOfFrame}" id="sizeOfFrame" required/>
+
+                <label class="form-label" for="sizeOfWheel">Rozmiar kół</label>
+                <input type="number" step="0.01" th:field="*{sizeOfWheel}" id="sizeOfWheel" required/>
+
+                <label class="form-label" for="price">Cena</label>
+                <input type="number" step="0.01" th:field="*{price}" id="price" required/>
+
+                <label class="form-label" for="quantity">Ilość</label>
+                <input type="number" th:field="*{quantity}" id="quantity" required/>
+
+                <label class="form-label" for="imagePath">Zdjecie</label>
+                <input type="file" name="file" id="imagePath" required/>
+
+                <div>
+                    <button type="submit">Dodaj</button>
+                </div>
+
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
